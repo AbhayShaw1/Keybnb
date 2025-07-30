@@ -1,7 +1,5 @@
-import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import api from '@/api';
 import ListingFilters from '@/components/ListingFilter';
 import ListingList from '@/components/ListingList';
 import { Separator, Spinner } from '@/components/ui';
@@ -12,11 +10,12 @@ const HomePage = () => {
     dates: undefined,
     search: '',
   });
+  const fetchOptions = useMemo(() => ({ params: filters }), [filters]);
   const {
     data: listings, //aliasing as listing
     error,
     isLoading,
-  } = useFetch('/api/listings', { params: filters });
+  } = useFetch('/api/listings', fetchOptions);
   const handleFilters = (filters) => {
     setFilters(filters);
   };
