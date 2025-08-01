@@ -1,11 +1,16 @@
 import ReactDOM from 'react-dom/client';
 
 import { seedLocalDatabase } from './api/data/seed';
-import App from './App';
 import Router from './Router';
 
 import './index.css';
+import { Provider } from 'react-redux';
+import { store } from '@/state/store.js';
 
 seedLocalDatabase();
 
-ReactDOM.createRoot(document.getElementById('root')).render(<Router />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <Router />
+  </Provider>,
+);
