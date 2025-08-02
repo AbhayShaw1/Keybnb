@@ -6,13 +6,23 @@ import api from '@/api';
 const initialState = {
   listings: [],
   error: null,
+  favouriteListingIds: [],
   status: 'idle',
 };
 
 const listingsSlice = createSlice({
   name: 'listings',
   initialState,
-  reducers: {},
+  reducers: {
+    addFavouriteListing: (state, action) => {
+      state.favouriteListingIds.push(action.payload);
+    },
+    removeFavouriteListing: (state, action) => {
+      state.favouriteListingIds = state.favouriteListingIds.filters(
+        (id) => id !== action.payload,
+      );
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchListings.pending, (state) => {
@@ -41,4 +51,6 @@ export const fetchListings = createAsyncThunk(
   },
 );
 
+export const { addFavouriteListing, removeFavouriteListing } =
+  listingsSlice.actions;
 export default listingsSlice.reducer;
