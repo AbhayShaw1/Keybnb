@@ -1,12 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import Route from '@/components/Route.jsx';
 import HomePage from '@/pages/HomePage';
 import ListingDetailsPage from '@/pages/ListingDetailsPage';
 import ListingFavoritesPage from '@/pages/ListingFavoritesPage.jsx';
+import SignInPage from '@/pages/SignInPage.jsx';
 
 import App from './App';
 import NotFoundPage from './pages/NotFoundPage';
-import SignInPage from '@/pages/SignInPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,19 +17,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/signin',
-        element: <SignInPage />,
+        element: (
+          <Route>
+            <SignInPage />
+          </Route>
+        ),
       },
       {
         path: '/',
-        element: <HomePage />,
+        element: (
+          <Route isProtected>
+            <HomePage />
+          </Route>
+        ),
       },
       {
         path: '/listings/:listingId',
-        element: <ListingDetailsPage />,
+        element: (
+          <Route isProtected>
+            <ListingDetailsPage />
+          </Route>
+        ),
       },
       {
         path: '/favorites',
-        element: <ListingFavoritesPage />,
+        element: (
+          <Route isProtected>
+            <ListingFavoritesPage />
+          </Route>
+        ),
       },
     ],
   },
