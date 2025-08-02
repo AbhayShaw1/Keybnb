@@ -7,11 +7,14 @@ import { seedLocalDatabase } from './api/data/seed';
 import Router from './Router';
 
 import './index.css';
+import { AuthProvider } from '@/components/AuthProvider.jsx';
 
 seedLocalDatabase();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <Router />
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
   </Provider>,
 );
