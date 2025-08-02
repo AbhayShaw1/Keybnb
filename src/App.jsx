@@ -1,8 +1,12 @@
 import { Outlet } from 'react-router-dom';
+
+import Navbar from '@/components/Navbar.jsx';
+
 const App = () => {
   return (
     <div>
-     <Outlet/>
+      <Navbar />
+      <Outlet />
     </div>
   );
 };
