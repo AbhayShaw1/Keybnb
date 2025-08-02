@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
+import api from '@/api';
+import { useAuth } from '@/components/AuthProvider';
 import {
   Button,
   Card,
@@ -10,13 +12,12 @@ import {
   Input,
   Separator,
 } from '@/components/ui';
-import { useAuth } from '@/components/AuthProvider.jsx';
-import api from '@/api';
 
 const signInFormSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(8),
 });
+
 const SignInForm = () => {
   const { setToken } = useAuth();
 
@@ -26,16 +27,16 @@ const SignInForm = () => {
     register,
     setError,
   } = useForm({
-    resolvers: zodResolver(signInFormSchema),
+    resolver: zodResolver(signInFormSchema),
   });
 
   const onSubmit = async (data) => {
     try {
       const response = await api.post('/api/signin', data);
-      setToken(response.data.token);
-    } catch (error) {
+      setToken(response.data.accessToken);
+    } catch (e) {
       setError('root', {
-        message: error.response.data.message,
+        message: e.response.data.message,
       });
     }
   };
@@ -45,7 +46,7 @@ const SignInForm = () => {
       <CardHeader>
         <h2 className='text-center text-2xl'>Sign In</h2>
         <p className='text-center text-muted-foreground'>
-          Sign in using email and password.
+          Sign in using your email and password
         </p>
         <Separator />
       </CardHeader>
@@ -53,23 +54,32 @@ const SignInForm = () => {
         <form className='flex flex-col gap-4'>
           <div>
             <Input {...register('email')} placeholder='name@example.com' />
-            {errors.email && (
-              <div className='alert alert-danger '>{errors.email.message}</div>
-            )}
-          </div>
-          <div>
-            <Input {...register('password')} placeholder='password' />
-            {errors.password && (
-              <div className='alert alert-danger '>
-                {errors.password.message}
+            {errors['email'] && (
+              <div className='mt-2 text-sm text-red-500'>
+                {errors['email'].message}
               </div>
             )}
           </div>
+
+          <div>
+            <Input
+              {...register('password')}
+              type='password'
+              placeholder='abc@123'
+            />
+            {errors['password'] && (
+              <div className='mt-2 text-sm text-red-500'>
+                {errors['password'].message}
+              </div>
+            )}
+          </div>
+
           <Button disabled={isSubmitting} onClick={handleSubmit(onSubmit)}>
-            {isSubmitting ? 'Loading...' : 'Sign in'}
+            {isSubmitting ? 'Loading...' : 'Sign In'}
           </Button>
+
           {errors.root && (
-            <div className='alert alert-danger text-center'>
+            <div className='text-center text-sm text-red-500'>
               {errors.root.message}
             </div>
           )}
