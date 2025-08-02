@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 
 import api from '@/api';
 
@@ -24,6 +30,17 @@ export const AuthProvider = ({ children }) => {
     };
     fetchToken();
   }, []);
+  useLayoutEffect(() => {
+    const authInterceptor = api.interceptors.request.use((config) => {
+      config.headers.authorization = token
+        ? `Bearer ${token}`
+        : config.headers.authorization;
+      return config;
+    });
+    return () => {
+      api.interceptors.request.eject(authInterceptor);
+    };
+  }, [token]);
   return (
     <AuthContext.Provider value={{ setToken, token }}>
       {children}
